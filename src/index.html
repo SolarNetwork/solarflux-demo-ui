@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html class="standalone">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=640" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <title>SolarFlux: Demo</title>
+    <link type="text/css" rel="stylesheet" href="css/solarflux-demo.css" />
+  </head>
+
+  <body>
+    <header class="hboxrow">
+      <h1>SolarFlux Demo</h1>
+      <i
+        class="fas fa-check-circle fa-2x auth result success hidden"
+        title="Authorization successful"
+      ></i>
+      <i
+        class="fas fa-times-circle fa-2x auth result error hidden"
+        title="Authorization failed"
+      ></i>
+      <input
+        type="text"
+        class="auth"
+        name="token"
+        placeholder="Token"
+        value="dummy-token-id"
+        autocomplete="off"
+        autocorrect="off"
+        autocapitalize="off"
+        spellcheck="false"
+      />
+      <input
+        type="password"
+        class="auth"
+        name="secret"
+        placeholder="Secret"
+        value="dummy-token-secret"
+      />
+      <button type="button" id="connect">Connect</button>
+    </header>
+    <main class="hboxrow">
+      <section class="choose-base">
+        <h2>Ready</h2>
+        <p>
+          SolarFlux provides a way to access SolarNode data in real time. This demo application will
+          connect to SolarFlux and show you any data that the nodes associted with your security
+          token allow.
+        </p>
+
+        <p class="hide-after-auth strong">
+          Start by authorizing yourself with a SolarNetwork security token in the login form at the
+          top right of this window.
+        </p>
+      </section>
+      <section class="prepare disabled">
+        <h2>Steady <span class="active-image-name"></span></h2>
+      </section>
+      <section class="submit disabled"><h2>Go!</h2></section>
+    </main>
+    <footer>
+      <p>Powered by <a href="https://solarnetwork.github.io/">SolarNetwork</a>.</p>
+    </footer>
+  </body>
+</html>
