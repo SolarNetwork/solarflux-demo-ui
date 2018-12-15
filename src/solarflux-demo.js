@@ -2,19 +2,15 @@
 "use strict";
 
 import { Configuration, Environment, urlQuery } from "solarnetwork-api-core";
-import { Client, Message } from "paho-mqtt";
+import { Client } from "paho-mqtt";
 import { event as d3event, select, selectAll } from "d3-selection";
-import { json as jsonRequest } from "d3-request";
+import CBOR from "cbor-sync";
 import connectionOptions from "./conn-options";
 
-// for development, can un-comment out the fluxEnv and snEnv objects
-// and configure values for your local dev environment.
-
 const fluxEnv = new Environment({
-  debug: true,
-  protocol: "ws",
-  host: "vernemq-flux",
-  port: 9001
+  protocol: "wss",
+  host: "flux.solarnetwork.net",
+  port: 443
 });
 
 const snEnv = new Environment({
@@ -53,15 +49,38 @@ var fluxApp = function(fluxEnvironment, snEnvironment, options) {
   }
 
   function onMessageArrived(message) {
-    console.log(message.destinationName + " message: " + message.payloadString);
+    var body = "";
+    var bytes = message.payloadBytes;
+    if (bytes) {
+      try {
+        body = CBOR.decode(bytes);
+      } catch (e) {
+        body = message.payloadString;
+        console.log("Message does not appear to be CBOR: " + e);
+      }
+    }
+    console.log(message.destinationName + " message: " + body);
+    select("#message-template").select(function() {
+      var msgEl = this.cloneNode(true);
+      select(msgEl)
+        .classed("template", false)
+        .text(body)
+        .select("[data-tprop=body]")
+        .text(body);
+      select("#messages").append(function() {
+        return msgEl;
+      });
+    });
   }
 
   function start() {
     // TODO
+    return self;
   }
 
   function stop() {
     // TODO
+    return self;
   }
 
   function handleAuthorizationInputKeyup() {
@@ -87,6 +106,7 @@ var fluxApp = function(fluxEnvironment, snEnvironment, options) {
     var options = connectionOptions(tokenId, select("input[name=secret]").property("value"));
     options.onFailure = connectError;
     options.onSuccess = connectSuccess;
+    options.useSSL = fluxEnvironment.protocol === "wss" ? true : false;
 
     if (client) {
       client.disconnect();
@@ -100,6 +120,8 @@ var fluxApp = function(fluxEnvironment, snEnvironment, options) {
     function connectSuccess(json) {
       console.log(`Connected to MQTT on ${client.host}:${client.port}${client.path}`);
       client.subscribe("node/+/datum/0/#");
+      selectAll(".hide-after-auth").classed("hidden", true);
+      select("section.output").classed("disabled", false);
     }
 
     function connectError(error) {

@@ -24,7 +24,7 @@
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.6",
     "@fortawesome/free-solid-svg-icons": "^5.4.1",
-    "d3-request": "^1.0.5",
+    "cbor-sync": "^1.0.3",
     "d3-selection": "^1.1.0",
     "paho-mqtt": "^1.1.0",
     "solarnetwork-api-core": "SolarNetwork/sn-api-core-js#develop"

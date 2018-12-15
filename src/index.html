@@ -41,7 +41,7 @@
       <button type="button" id="connect">Connect</button>
     </header>
     <main class="hboxrow">
-      <section class="choose-base">
+      <section class="welcome">
         <h2>Ready</h2>
         <p>
           SolarFlux provides a way to access SolarNode data in real time. This demo application will
@@ -54,10 +54,15 @@
           top right of this window.
         </p>
       </section>
-      <section class="prepare disabled">
-        <h2>Steady <span class="active-image-name"></span></h2>
+      <section class="output disabled">
+        <h2>Go!</h2>
+        <p class="once-enabled">
+          You're off to the races, congratulations. Any messages posted to SolarFlux for your
+          security token will appear here.
+        </p>
+        <li id="message-template" class="message template" data-tprop="body"></li>
+        <ol id="messages" class="container"></ol>
       </section>
-      <section class="submit disabled"><h2>Go!</h2></section>
     </main>
     <footer>
       <p>Powered by <a href="https://solarnetwork.github.io/">SolarNetwork</a>.</p>
