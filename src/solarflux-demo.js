@@ -9,14 +9,14 @@ import CBOR from "cbor-sync";
 import connectionOptions from "./conn-options";
 
 const fluxEnv = new Environment({
-  /*
   protocol: "ws",
   host: "flux.solarnetworkdev.net",
   port: 9001
-  */
+  /*
   protocol: "wss",
   host: "flux.solarnetwork.net",
   port: 443
+  */
 });
 
 const snEnv = new Environment({
