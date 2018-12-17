@@ -9,14 +9,14 @@ import CBOR from "cbor-sync";
 import connectionOptions from "./conn-options";
 
 const fluxEnv = new Environment({
+  /*
   protocol: "ws",
   host: "flux.solarnetworkdev.net",
   port: 9001
-  /*
+  */
   protocol: "wss",
   host: "flux.solarnetwork.net",
   port: 443
-  */
 });
 
 const snEnv = new Environment({
@@ -178,15 +178,7 @@ var fluxApp = function(fluxEnvironment, snEnvironment, options) {
     selectAll(".hide-after-auth").classed("hidden", connected && fully);
   }
 
-  function connect() {
-    uiStateConnected(true);
-    const tokenId = select("input[name=token]").property("value");
-
-    var options = connectionOptions(tokenId, select("input[name=secret]").property("value"));
-    options.onFailure = connectError;
-    options.onSuccess = connectSuccess;
-    options.useSSL = fluxEnvironment.protocol === "wss" ? true : false;
-
+  function disconnect() {
     if (client) {
       try {
         client.disconnect();
@@ -194,6 +186,19 @@ var fluxApp = function(fluxEnvironment, snEnvironment, options) {
         console.log("Error disconnecting client; ignoring: " + e);
       }
     }
+  }
+
+  function connect() {
+    uiStateConnected(true);
+    disconnect();
+
+    const tokenId = select("input[name=token]").property("value");
+
+    const options = connectionOptions(tokenId, select("input[name=secret]").property("value"));
+    options.onFailure = connectError;
+    options.onSuccess = connectSuccess;
+    options.useSSL = fluxEnvironment.protocol === "wss" ? true : false;
+
     client = new Client(fluxEnvironment.host, fluxEnvironment.port, "/mqtt");
     client.onConnectionLost = onConnectionLost;
     client.onMessageArrived = onMessageArrived;
@@ -202,7 +207,7 @@ var fluxApp = function(fluxEnvironment, snEnvironment, options) {
     if (!topics) {
       topics = "node/+/datum/0/#";
     }
-    let subOptions = {
+    const subOptions = {
       onSuccess: subscribeSuccess,
       onFailure: subscribeError
     };
@@ -245,6 +250,7 @@ var fluxApp = function(fluxEnvironment, snEnvironment, options) {
 
   function init() {
     document.getElementById("connect").addEventListener("click", connect);
+    document.getElementById("end").addEventListener("click", disconnect);
     document.getElementById("topic-form").addEventListener("submit", function(event) {
       event.preventDefault();
       return false;
