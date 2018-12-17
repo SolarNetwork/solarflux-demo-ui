@@ -273,14 +273,48 @@ pre.example {
   display: none;
 }
 
-.message .body {
-  display: block;
-  padding: 4px;
-  border: 1px solid rgba(0, 0, 0, 0.2);
-  background-color: rgba(255, 255, 255, 0.5);
-  border-radius: 4px;
-  color: black;
-  font-size: 10pt;
-  overflow-wrap: break-word;
-  max-width: 600px;
+.message + .message {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px dotted #666;
+}
+
+.message {
+  font-size: 0.8rem;
+}
+
+.message .topic {
+  color: #fce94f;
+  font-weight: bold;
+}
+
+.message dl {
+  display: flex;
+  flex-flow: row;
+  flex-wrap: wrap;
+  max-width: 600px; /* set the container width*/
+  overflow: visible;
+  font-family: monospace;
+  font-size: 0.8rem;
+  margin-left: 24px;
+}
+
+.message dt {
+  flex: 0 0 25%;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.message dd {
+  flex: 0 0 75%;
+  margin-left: auto;
+  text-align: left;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.message dd ol {
+  margin-top: 0;
+  margin-bottom: 0;
+  border-left: 1px dotted #1587d4;
 }

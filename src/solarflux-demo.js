@@ -3,6 +3,7 @@
 
 import { Configuration, Environment, urlQuery } from "solarnetwork-api-core";
 import { Client } from "paho-mqtt";
+import { merge } from "d3-array";
 import { event as d3event, select, selectAll } from "d3-selection";
 import CBOR from "cbor-sync";
 import connectionOptions from "./conn-options";
@@ -73,9 +74,9 @@ var fluxApp = function(fluxEnvironment, snEnvironment, options) {
       try {
         if (bytes.buffer) {
           let hex = bytesToHex(bytes);
-          body = JSON.stringify(CBOR.decode(hex, "hex"));
+          body = CBOR.decode(hex, "hex");
         } else {
-          body = JSON.stringify(CBOR.decode(bytes));
+          body = CBOR.decode(bytes);
         }
       } catch (e) {
         body = message.payloadString;
@@ -90,12 +91,55 @@ var fluxApp = function(fluxEnvironment, snEnvironment, options) {
         .attr("id", null)
         .select("[data-tprop=topic]")
         .text(message.destinationName);
-      select(msgEl)
-        .select("[data-tprop=body]")
-        .text(body);
-      select("#messages").append(function() {
-        return msgEl;
-      });
+      if (typeof body === "string") {
+        select(msgEl)
+          .select("[data-tprop=body]")
+          .text(body);
+      } else {
+        let data = merge(
+          Object.keys(body).map(function(k) {
+            return [k, body[k]];
+          })
+        );
+        select(msgEl)
+          .select("[data-tprop=body]")
+          .append("dl")
+          .selectAll()
+          .data(data)
+          .enter()
+          .append(function(d, i) {
+            return document.createElement(i % 2 == 0 ? "dt" : "dd");
+          })
+          .each(function(d, i) {
+            if (i % 2 == 0) {
+              select(this).text(d);
+              return;
+            }
+            if (Array.isArray(d)) {
+              let ol = document.createElement("ol");
+              select(ol)
+                .selectAll("li")
+                .data(d)
+                .enter()
+                .append("li")
+                .text(function(v) {
+                  return v;
+                });
+              this.appendChild(ol);
+            } else {
+              let prevKey = data[i - 1];
+              select(this).text(function(t) {
+                if (prevKey === "created") {
+                  return new Date(d).toISOString().replace("T", " ");
+                } else {
+                  return t;
+                }
+              });
+            }
+          });
+      }
+      let container = document.getElementById("messages");
+      container.insertBefore(msgEl, container.firstChild);
     });
   }
 
