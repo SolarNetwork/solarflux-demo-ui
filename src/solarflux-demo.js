@@ -8,9 +8,14 @@ import CBOR from "cbor-sync";
 import connectionOptions from "./conn-options";
 
 const fluxEnv = new Environment({
+  protocol: "ws",
+  host: "flux.solarnetworkdev.net",
+  port: 9001
+  /*
   protocol: "wss",
   host: "flux.solarnetwork.net",
   port: 443
+  */
 });
 
 const snEnv = new Environment({
@@ -48,12 +53,30 @@ var fluxApp = function(fluxEnvironment, snEnvironment, options) {
     }
   }
 
+  function bytesToHex(bytes) {
+    var s = "",
+      b;
+    for (var i = 0; i < bytes.length; i += 1) {
+      b = bytes[i];
+      if (b < 0x10) {
+        s += "0";
+      }
+      s += b.toString(16);
+    }
+    return s;
+  }
+
   function onMessageArrived(message) {
     var body = "";
     var bytes = message.payloadBytes;
     if (bytes) {
       try {
-        body = CBOR.decode(bytes);
+        if (bytes.buffer) {
+          let hex = bytesToHex(bytes);
+          body = JSON.stringify(CBOR.decode(hex, "hex"));
+        } else {
+          body = JSON.stringify(CBOR.decode(bytes));
+        }
       } catch (e) {
         body = message.payloadString;
         console.log("Message does not appear to be CBOR: " + e);
@@ -64,7 +87,10 @@ var fluxApp = function(fluxEnvironment, snEnvironment, options) {
       var msgEl = this.cloneNode(true);
       select(msgEl)
         .classed("template", false)
-        .text(body)
+        .attr("id", null)
+        .select("[data-tprop=topic]")
+        .text(message.destinationName);
+      select(msgEl)
         .select("[data-tprop=body]")
         .text(body);
       select("#messages").append(function() {
@@ -109,7 +135,11 @@ var fluxApp = function(fluxEnvironment, snEnvironment, options) {
     options.useSSL = fluxEnvironment.protocol === "wss" ? true : false;
 
     if (client) {
-      client.disconnect();
+      try {
+        client.disconnect();
+      } catch (e) {
+        console.log("Error disconnecting client; ignoring: " + e);
+      }
     }
     client = new Client(fluxEnvironment.host, fluxEnvironment.port, "/mqtt");
     client.onConnectionLost = onConnectionLost;
