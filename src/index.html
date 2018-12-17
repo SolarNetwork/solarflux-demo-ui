@@ -25,20 +25,14 @@
         class="auth"
         name="token"
         placeholder="Token"
-        value="dummy-token-id"
         autocomplete="off"
         autocorrect="off"
         autocapitalize="off"
         spellcheck="false"
       />
-      <input
-        type="password"
-        class="auth"
-        name="secret"
-        placeholder="Secret"
-        value="dummy-token-secret"
-      />
+      <input type="password" class="auth" name="secret" placeholder="Secret" />
       <button type="button" id="connect">Connect</button>
+      <button type="button" class="destructive" id="end" disabled>End</button>
     </header>
     <main class="hboxrow">
       <section class="welcome">
@@ -51,8 +45,19 @@
 
         <p class="hide-after-auth strong">
           Start by authorizing yourself with a SolarNetwork security token in the login form at the
-          top right of this window.
+          top right of this window. Narrow the topics to subscribe to in the form below before you
+          connect, if desired.
         </p>
+
+        <form id="topic-form">
+          <label for="topics">Topics</label>
+          <input id="topics" name="topics" type="text" value="node/+/datum/0/#" />
+          <span class="caption"></span>
+          <p class="alert hide-after-auth">
+            <b>Heads up!</b> You can only subscribe to the node ID(s) and source ID(s) allowed by
+            the security policy attached to the token you authenticate with.
+          </p>
+        </form>
 
         <p>
           Note that only data from SolarNodes that have the SolarFlux Upload plugin active will
