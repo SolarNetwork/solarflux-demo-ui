@@ -24,11 +24,13 @@
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.6",
     "@fortawesome/free-solid-svg-icons": "^5.4.1",
+    "ascii85": "^1.0.2",
     "cbor-sync": "^1.0.3",
     "d3-array": "^1.2.4",
     "d3-selection": "^1.1.0",
     "paho-mqtt": "^1.1.0",
-    "solarnetwork-api-core": "SolarNetwork/sn-api-core-js#develop"
+    "solarnetwork-api-core": "SolarNetwork/sn-api-core-js#develop",
+    "uuid": "^3.3.2"
   },
   "devDependencies": {
     "ava": "^0.25.0",

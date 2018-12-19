@@ -5,6 +5,8 @@ import { Configuration, Environment, urlQuery } from "solarnetwork-api-core";
 import { Client } from "paho-mqtt";
 import { merge } from "d3-array";
 import { event as d3event, select, selectAll } from "d3-selection";
+import { ZeroMQ as ascii85 } from "ascii85";
+import uuid from "uuid/v4";
 import CBOR from "cbor-sync";
 import connectionOptions from "./conn-options";
 
@@ -59,6 +61,7 @@ var fluxApp = function(fluxEnvironment, snEnvironment, options) {
     };
 
   var client;
+  var clientId;
 
   function onConnectionLost(resp) {
     uiStateConnected(false);
@@ -188,18 +191,35 @@ var fluxApp = function(fluxEnvironment, snEnvironment, options) {
     }
   }
 
+  function getTokenId() {
+    return select("input[name=token]").property("value");
+  }
+
+  function getClientId() {
+    const tokenId = getTokenId();
+    if (clientId && clientId.startsWith(tokenId)) {
+      // re-use existing client ID
+      return clientId;
+    }
+    // generate new client ID from token ID + random 20 character string
+    const rnd = new Array();
+    uuid(undefined, rnd);
+    const suffix = ascii85.encode(rnd).toString();
+    clientId = tokenId + suffix;
+    return clientId;
+  }
+
   function connect() {
     uiStateConnected(true);
     disconnect();
 
-    const tokenId = select("input[name=token]").property("value");
-
+    const tokenId = getTokenId();
     const options = connectionOptions(tokenId, select("input[name=secret]").property("value"));
     options.onFailure = connectError;
     options.onSuccess = connectSuccess;
     options.useSSL = fluxEnvironment.protocol === "wss" ? true : false;
 
-    client = new Client(fluxEnvironment.host, fluxEnvironment.port, "/mqtt");
+    client = new Client(fluxEnvironment.host, fluxEnvironment.port, "/mqtt", getClientId());
     client.onConnectionLost = onConnectionLost;
     client.onMessageArrived = onMessageArrived;
 
@@ -215,7 +235,9 @@ var fluxApp = function(fluxEnvironment, snEnvironment, options) {
     client.connect(options);
 
     function connectSuccess(json) {
-      console.log(`Connected to MQTT on ${client.host}:${client.port}${client.path}`);
+      console.log(
+        `Connected to MQTT on ${client.host}:${client.port}${client.path} as ${clientId}`
+      );
       console.log(`Subscribing to topics: ${topics}`);
       client.subscribe(topics, subOptions);
     }
@@ -248,7 +270,12 @@ var fluxApp = function(fluxEnvironment, snEnvironment, options) {
     }
   }
 
+  function clear() {
+    selectAll("#messages > *").remove();
+  }
+
   function init() {
+    document.getElementById("clear").addEventListener("click", clear);
     document.getElementById("connect").addEventListener("click", connect);
     document.getElementById("end").addEventListener("click", disconnect);
     document.getElementById("topic-form").addEventListener("submit", function(event) {
