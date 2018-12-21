@@ -29,6 +29,15 @@ const snEnv = new Environment({
   */
 });
 
+// handle decimal floats, which arrive as array of 2 elements; https://tools.ietf.org/html/rfc7049#section-2.4.3
+CBOR.addSemanticDecode(4, function(data) {
+  // this might just be a hack; reversing the sign given by cbor-sync
+  if (Array.isArray(data) && data.length > 1) {
+    return data[1] * Math.pow(10, -data[0]);
+  }
+  return data;
+});
+
 var app;
 
 function bytesToHex(bytes) {
