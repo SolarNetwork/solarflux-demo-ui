@@ -1,5 +1,4 @@
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const webpack = require("webpack");
 const path = require("path");
 
 const devtool = "source-map"; // cheap-module-eval-source-map
@@ -17,8 +16,13 @@ const config = {
     compress: false,
     port: 9000
   },
+  mode: "development",
   module: {
     rules: [
+      {
+        test: /prettify\.js/,
+        use: "exports-loader?PR"
+      },
       {
         test: /\.js$/,
         exclude: /(node_modules|bower_components)/,
@@ -28,7 +32,7 @@ const config = {
             babelrc: false,
             presets: [
               [
-                "env",
+                "@babel/preset-env",
                 {
                   targets: {
                     browsers: ["> 5%"],
@@ -36,18 +40,26 @@ const config = {
                     node: "current"
                   },
                   modules: false,
-                  useBuiltIns: true,
+                  useBuiltIns: "entry",
                   debug: true
                 }
               ]
-            ],
-            plugins: [
-              //              require('babel-plugin-transform-runtime'),
             ]
           }
         }
       },
-      { test: /\.css$/, use: "file-loader?name=css/[name].[ext]" },
+      {
+        test: /\.css$/,
+        use: [
+          {
+            loader: "style-loader/url",
+            options: { sourceMap: false }
+          },
+          {
+            loader: "file-loader?name=css/[name].[ext]"
+          }
+        ]
+      },
       { test: /\.(gif|jpg|png)$/, use: "file-loader?name=assets/[name].[ext]" }
     ]
   },
