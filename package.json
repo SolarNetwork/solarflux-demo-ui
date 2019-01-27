@@ -18,8 +18,7 @@
   },
   "scripts": {
     "start": "webpack-dev-server",
-    "build": "webpack",
-    "test": "ava"
+    "build": "webpack"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.6",
