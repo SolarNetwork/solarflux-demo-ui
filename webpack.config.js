@@ -1,4 +1,5 @@
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const webpack = require("webpack");
 const path = require("path");
 
 const devtool = "source-map"; // cheap-module-eval-source-map
@@ -52,8 +53,8 @@ const config = {
         test: /\.css$/,
         use: [
           {
-            loader: "style-loader/url",
-            options: { sourceMap: false }
+            loader: "style-loader",
+            options: { injectType: "linkTag" }
           },
           {
             loader: "file-loader?name=css/[name].[ext]"
@@ -63,7 +64,12 @@ const config = {
       { test: /\.(gif|jpg|png)$/, use: "file-loader?name=assets/[name].[ext]" }
     ]
   },
-  plugins: [new HtmlWebpackPlugin({ template: "./src/index.html" })],
+  plugins: [
+    new webpack.DefinePlugin({
+      VERSION: JSON.stringify(require("./package.json").version)
+    }),
+    new HtmlWebpackPlugin({ template: "./src/index.html" })
+  ],
   resolve: {
     alias: {
       "@fortawesome/fontawesome-free-solid$": "@fortawesome/fontawesome-free-solid/shakable.es.js"
