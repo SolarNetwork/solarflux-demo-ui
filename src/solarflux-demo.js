@@ -29,11 +29,16 @@ const snEnv = new Environment({
   */
 });
 
-// handle decimal floats, which arrive as array of 2 elements; https://tools.ietf.org/html/rfc7049#section-2.4.3
 CBOR.addSemanticDecode(4, function(data) {
-  // this might just be a hack; reversing the sign given by cbor-sync
+  // handle decimal floats, which arrive as array of 2 elements; https://tools.ietf.org/html/rfc7049#section-2.4.3
+  var e;
   if (Array.isArray(data) && data.length > 1) {
-    return data[1] * Math.pow(10, -data[0]);
+    e = data[0];
+    if (e > 0) {
+      // work around generated CBOR bug https://github.com/FasterXML/jackson-dataformats-binary/issues/139
+      e = -e;
+    }
+    return data[1] * Math.pow(10, e);
   }
   return data;
 });
