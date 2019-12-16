@@ -11,29 +11,32 @@ import CBOR from "cbor-sync";
 import connectionOptions from "./conn-options";
 
 const fluxEnv = new Environment({
-  /*
   protocol: "ws",
   host: "flux.solarnetworkdev.net",
   port: 9001
-  */
+  /*
   protocol: "wss",
   host: "flux.solarnetwork.net",
   port: 443
-});
-
-const snEnv = new Environment({
-  /*
-	protocol: 'http',
-	host: 'solarnetworkdev.net',
-  port: 8680,
   */
 });
 
-// handle decimal floats, which arrive as array of 2 elements; https://tools.ietf.org/html/rfc7049#section-2.4.3
+const snEnv = new Environment({
+  protocol: "http",
+  host: "solarnetworkdev.net",
+  port: 8680
+});
+
 CBOR.addSemanticDecode(4, function(data) {
-  // this might just be a hack; reversing the sign given by cbor-sync
+  // handle decimal floats, which arrive as array of 2 elements; https://tools.ietf.org/html/rfc7049#section-2.4.3
+  var e;
   if (Array.isArray(data) && data.length > 1) {
-    return data[1] * Math.pow(10, -data[0]);
+    e = data[0];
+    if (e > 0) {
+      // work around generated CBOR bug https://github.com/FasterXML/jackson-dataformats-binary/issues/139
+      e = -e;
+    }
+    return data[1] * Math.pow(10, e);
   }
   return data;
 });
