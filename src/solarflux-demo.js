@@ -29,12 +29,14 @@ const snEnv = new Environment({
   */
 });
 
+var legacyDecodeMode = false;
+
 CBOR.addSemanticDecode(4, function(data) {
   // handle decimal floats, which arrive as array of 2 elements; https://tools.ietf.org/html/rfc7049#section-2.4.3
   var e;
   if (Array.isArray(data) && data.length > 1) {
     e = data[0];
-    if (e > 0) {
+    if (legacyDecodeMode) {
       // work around generated CBOR bug https://github.com/FasterXML/jackson-dataformats-binary/issues/139
       e = -e;
     }
@@ -84,16 +86,26 @@ var fluxApp = function(fluxEnvironment, snEnvironment, options) {
     }
   }
 
+  function decodeCbor(bytes) {
+    if (bytes.buffer) {
+      let hex = bytesToHex(bytes);
+      return CBOR.decode(hex, "hex");
+    } else {
+      return CBOR.decode(bytes);
+    }
+  }
+
   function onMessageArrived(message) {
     var body = "";
     var bytes = message.payloadBytes;
     if (bytes) {
       try {
-        if (bytes.buffer) {
-          let hex = bytesToHex(bytes);
-          body = CBOR.decode(hex, "hex");
-        } else {
-          body = CBOR.decode(bytes);
+        legacyDecodeMode = false;
+        body = decodeCbor(bytes);
+        if (body && !(body._v && body._v > 1)) {
+          // legacy datum with CBOR bug; work around
+          legacyDecodeMode = true;
+          body = decodeCbor(bytes);
         }
       } catch (e) {
         body = message.payloadString;
