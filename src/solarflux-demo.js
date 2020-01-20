@@ -98,11 +98,16 @@ var fluxApp = function(fluxEnvironment, snEnvironment, options) {
   function onMessageArrived(message) {
     var body = "";
     var bytes = message.payloadBytes;
+    var agg = "0";
+    var m = /\/datum\/([0-9a-zA-Z]+)\//.exec(message.topic);
+    if (m && m.length > 0) {
+      agg = m[1];
+    }
     if (bytes) {
       try {
         legacyDecodeMode = false;
         body = decodeCbor(bytes);
-        if (body && !(body._v && body._v > 1)) {
+        if (body && agg === "0" && !(body._v && body._v > 1)) {
           // legacy datum with CBOR bug; work around
           legacyDecodeMode = true;
           body = decodeCbor(bytes);
