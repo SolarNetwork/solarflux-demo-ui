@@ -117,7 +117,10 @@ var fluxApp = function(fluxEnvironment, snEnvironment, options) {
         console.log("Message does not appear to be CBOR: " + e);
       }
     }
-    console.log(`${message.destinationName} message: %o`, body);
+    console.log(
+      `${message.destinationName} message${message.retained ? " (retained)" : ""}: %o`,
+      body
+    );
     select("#message-template").select(function() {
       var msgEl = this.cloneNode(true);
       select(msgEl)
@@ -125,6 +128,11 @@ var fluxApp = function(fluxEnvironment, snEnvironment, options) {
         .attr("id", null)
         .select("[data-tprop=topic]")
         .text(message.destinationName);
+      if (message.retained) {
+        select(msgEl)
+          .select(".retained")
+          .classed("hidden", false);
+      }
       if (typeof body === "string") {
         select(msgEl)
           .select("[data-tprop=body]")

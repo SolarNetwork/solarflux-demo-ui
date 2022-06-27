@@ -298,6 +298,15 @@ pre.example {
   font-weight: bold;
 }
 
+.retained {
+  color: #df5b5b;
+  font-weight: bold;
+}
+
+.message .retained {
+  margin-left: 1rem;
+}
+
 .message dl {
   display: flex;
   flex-flow: row;

@@ -60,7 +60,8 @@
 
         <p>
           Note that only data from SolarNodes that have the SolarFlux Upload plugin active will
-          appear.
+          appear. Messages shown with <span class="retained">Retained</span> mean the message is the
+          <em>last message seen</em> by SolarFlux in that topic.
         </p>
       </section>
       <section class="output disabled">
@@ -73,7 +74,8 @@
           security token will appear here.
         </p>
         <div id="message-template" class="message template">
-          <span class="topic" data-tprop="topic"></span><span class="body" data-tprop="body"></span>
+          <span class="topic" data-tprop="topic"></span><span class="retained hidden">Retained</span
+          ><span class="body" data-tprop="body"></span>
         </div>
         <div id="messages" class="container"></div>
       </section>
