@@ -40,13 +40,12 @@ const config = {
                 "@babel/preset-env",
                 {
                   targets: {
-                    browsers: ["> 5%"],
-                    safari: "10.1",
+                    browsers: ["> 1%"],
                     node: "current"
                   },
                   modules: false,
                   useBuiltIns: "entry",
-                  corejs: "3.11",
+                  corejs: "3.21",
                   debug: true
                 }
               ]
