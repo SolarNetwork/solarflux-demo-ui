@@ -13,7 +13,6 @@ const config = {
   },
   devtool: devtool,
   devServer: {
-    contentBase: path.join(__dirname, "dist"),
     compress: false,
     port: 9000
   },
@@ -22,7 +21,12 @@ const config = {
     rules: [
       {
         test: /prettify\.js/,
-        use: "exports-loader?PR"
+        use: {
+          loader: "exports-loader",
+          options: {
+            exports: "default PR"
+          }
+        }
       },
       {
         test: /\.js$/,
@@ -42,6 +46,7 @@ const config = {
                   },
                   modules: false,
                   useBuiltIns: "entry",
+                  corejs: "3.11",
                   debug: true
                 }
               ]
@@ -57,7 +62,7 @@ const config = {
             options: { injectType: "linkTag" }
           },
           {
-            loader: "file-loader?name=css/[name].[ext]"
+            loader: "file-loader?name=assets/[name].[ext]"
           }
         ]
       },
@@ -65,6 +70,9 @@ const config = {
     ]
   },
   plugins: [
+    new webpack.ProvidePlugin({
+      Buffer: ["buffer", "Buffer"]
+    }),
     new webpack.DefinePlugin({
       VERSION: JSON.stringify(require("./package.json").version)
     }),
@@ -73,6 +81,10 @@ const config = {
   resolve: {
     alias: {
       "@fortawesome/fontawesome-free-solid$": "@fortawesome/fontawesome-free-solid/shakable.es.js"
+    },
+    fallback: {
+      //"stream": require.resolve("stream-browserify"),
+      buffer: require.resolve("buffer/")
     }
   }
 };
