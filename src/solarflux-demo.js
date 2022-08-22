@@ -170,7 +170,7 @@ var fluxApp = function (fluxEnvironment, snEnvironment, options) {
                 if (prevKey === "created") {
                   return new Date(d).toISOString().replace("T", " ");
                 } else if (typeof t === "object") {
-                  return JSON.stringify(t);
+                  return JSON.stringify(t, null, "\t");
                 } else {
                   return t;
                 }
