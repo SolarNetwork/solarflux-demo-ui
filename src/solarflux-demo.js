@@ -18,7 +18,7 @@ const fluxEnv = new Environment({
   */
   protocol: "wss",
   host: "flux.solarnetwork.net",
-  port: 443
+  port: 443,
 });
 
 const snEnv = new Environment({
@@ -31,7 +31,7 @@ const snEnv = new Environment({
 
 var legacyDecodeMode = false;
 
-CBOR.addSemanticDecode(4, function(data) {
+CBOR.addSemanticDecode(4, function (data) {
   // handle decimal floats, which arrive as array of 2 elements; https://tools.ietf.org/html/rfc7049#section-2.4.3
   var e;
   if (Array.isArray(data) && data.length > 1) {
@@ -68,7 +68,7 @@ function bytesToHex(bytes) {
  * @param {Environment} [snEnvironment] the environment to use for SolarNetwork authentication
  * @param {Object} [options] optional configuration options
  */
-var fluxApp = function(fluxEnvironment, snEnvironment, options) {
+var fluxApp = function (fluxEnvironment, snEnvironment, options) {
   const self = { version: "1.0.0" };
   const config =
     options ||
@@ -121,7 +121,7 @@ var fluxApp = function(fluxEnvironment, snEnvironment, options) {
       `${message.destinationName} message${message.retained ? " (retained)" : ""}: %o`,
       body
     );
-    select("#message-template").select(function() {
+    select("#message-template").select(function () {
       var msgEl = this.cloneNode(true);
       select(msgEl)
         .classed("template", false)
@@ -129,17 +129,13 @@ var fluxApp = function(fluxEnvironment, snEnvironment, options) {
         .select("[data-tprop=topic]")
         .text(message.destinationName);
       if (message.retained) {
-        select(msgEl)
-          .select(".retained")
-          .classed("hidden", false);
+        select(msgEl).select(".retained").classed("hidden", false);
       }
       if (typeof body === "string") {
-        select(msgEl)
-          .select("[data-tprop=body]")
-          .text(body);
+        select(msgEl).select("[data-tprop=body]").text(body);
       } else {
         let data = merge(
-          Object.keys(body).map(function(k) {
+          Object.keys(body).map(function (k) {
             return [k, body[k]];
           })
         );
@@ -149,10 +145,10 @@ var fluxApp = function(fluxEnvironment, snEnvironment, options) {
           .selectAll()
           .data(data)
           .enter()
-          .append(function(d, i) {
+          .append(function (d, i) {
             return document.createElement(i % 2 == 0 ? "dt" : "dd");
           })
-          .each(function(d, i) {
+          .each(function (d, i) {
             if (i % 2 == 0) {
               select(this).text(d);
               return;
@@ -164,15 +160,17 @@ var fluxApp = function(fluxEnvironment, snEnvironment, options) {
                 .data(d)
                 .enter()
                 .append("li")
-                .text(function(v) {
+                .text(function (v) {
                   return v;
                 });
               this.appendChild(ol);
             } else {
               let prevKey = data[i - 1];
-              select(this).text(function(t) {
+              select(this).text(function (t) {
                 if (prevKey === "created") {
                   return new Date(d).toISOString().replace("T", " ");
+                } else if (typeof t === "object") {
+                  return JSON.stringify(t);
                 } else {
                   return t;
                 }
@@ -268,7 +266,7 @@ var fluxApp = function(fluxEnvironment, snEnvironment, options) {
     }
     const subOptions = {
       onSuccess: subscribeSuccess,
-      onFailure: subscribeError
+      onFailure: subscribeError,
     };
 
     client.connect(options);
@@ -283,9 +281,7 @@ var fluxApp = function(fluxEnvironment, snEnvironment, options) {
 
     function connectError(error) {
       uiStateConnected(false);
-      let msg = `Error connecting to ${fluxEnvironment.host}:${fluxEnvironment.port} (${
-        error.errorCode
-      }): ${error.errorMessage}`;
+      let msg = `Error connecting to ${fluxEnvironment.host}:${fluxEnvironment.port} (${error.errorCode}): ${error.errorMessage}`;
       console.error(msg);
       alert(msg);
     }
@@ -297,9 +293,7 @@ var fluxApp = function(fluxEnvironment, snEnvironment, options) {
 
     function subscribeError(error) {
       uiStateConnected(false);
-      let msg = `Subscribe error for topics [${topics}] (${error.errorCode}): ${
-        error.errorMessage
-      }`;
+      let msg = `Subscribe error for topics [${topics}] (${error.errorCode}): ${error.errorMessage}`;
       console.log(msg);
       if (error.errorCode && error.errorCode.length > 0 && error.errorCode[0] === 128) {
         // permission denied
@@ -317,7 +311,7 @@ var fluxApp = function(fluxEnvironment, snEnvironment, options) {
     document.getElementById("clear").addEventListener("click", clear);
     document.getElementById("connect").addEventListener("click", connect);
     document.getElementById("end").addEventListener("click", disconnect);
-    document.getElementById("topic-form").addEventListener("submit", function(event) {
+    document.getElementById("topic-form").addEventListener("submit", function (event) {
       event.preventDefault();
       return false;
     });
@@ -325,7 +319,7 @@ var fluxApp = function(fluxEnvironment, snEnvironment, options) {
     selectAll("input.auth").on("keyup", handleAuthorizationInputKeyup);
     return Object.defineProperties(self, {
       start: { value: start },
-      stop: { value: stop }
+      stop: { value: stop },
     });
   }
 
@@ -344,7 +338,7 @@ export default function startApp() {
 
   app = fluxApp(fluxEnv, snEnv, config).start();
 
-  window.onbeforeunload = function() {
+  window.onbeforeunload = function () {
     app.stop();
   };
 
