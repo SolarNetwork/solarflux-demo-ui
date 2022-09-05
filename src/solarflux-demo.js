@@ -31,6 +31,32 @@ const snEnv = new Environment({
 
 var legacyDecodeMode = false;
 
+function bigIntDecoder(data) {
+  if (!data) {
+    return null;
+  }
+  // assuming that `data` is a `Uint8Array`
+  let result = 0n;
+  for (let i = 0; i < data.length; i += 1) {
+    result = (result << 8n) + BigInt(data[i]);
+  }
+  return result;
+}
+
+CBOR.addSemanticDecode(2, function (data) {
+  // handle bignum, which arrive as ByteBuffer; https://tools.ietf.org/html/rfc7049#section-2.4.2
+  return bigIntDecoder(data);
+});
+
+CBOR.addSemanticDecode(3, function (data) {
+  // handle negative bignum, which arrive as ByteBuffer; https://tools.ietf.org/html/rfc7049#section-2.4.2
+  let result = bigIntDecoder(data);
+  if (result !== null) {
+    result = -1n - result;
+  }
+  return result;
+});
+
 CBOR.addSemanticDecode(4, function (data) {
   // handle decimal floats, which arrive as array of 2 elements; https://tools.ietf.org/html/rfc7049#section-2.4.3
   var e;
