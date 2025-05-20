@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link
+			rel="icon"
+			type="image/svg+xml"
+			href="img/solarnetwork-favicon.svg"
+		/>
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400&display=swap"
+			rel="stylesheet"
+		/>
+		<link
+			href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&display=swap"
+			rel="stylesheet"
+		/>
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1, shrink-to-fit=no"
+		/>
+		<title>SolarFlux Monitor</title>
+	</head>
+	<body class="pt-5">
+		<nav class="navbar navbar-expand-lg fixed-top bg-body-tertiary">
+			<div class="container-fluid">
+				<a class="navbar-brand" href="#">SolarFlux Monitor</a>
+				<button
+					class="navbar-toggler"
+					type="button"
+					data-bs-toggle="collapse"
+					data-bs-target="#navbarSupportedContent"
+					aria-controls="navbarSupportedContent"
+					aria-expanded="false"
+					aria-label="Toggle navigation"
+				>
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div
+					class="collapse navbar-collapse"
+					id="navbarSupportedContent"
+				>
+					<form class="d-flex flex-grow-1 my-2 my-lg-0" id="settings">
+						<input
+							class="form-control me-2"
+							type="text"
+							name="token"
+							autocomplete="off"
+							autocorrect="off"
+							autocapitalize="off"
+							spellcheck="false"
+							placeholder="Token"
+							aria-label="Token"
+						/>
+						<input
+							class="form-control me-2"
+							type="password"
+							name="secret"
+							placeholder="Secret"
+							aria-label="Secret"
+						/>
+						<div class="input-group me-2">
+							<input
+								class="form-control"
+								type="text"
+								name="topicFilter"
+								placeholder="Topic filter"
+								title="Topic filter"
+								aria-label="Topic filter"
+								value="node/+/datum/0/#"
+							/>
+							<button
+								class="btn btn-outline-secondary dropdown-toggle"
+								type="button"
+								data-bs-toggle="dropdown"
+								aria-expanded="false"
+							></button>
+							<ul
+								id="topic-shortcuts"
+								class="dropdown-menu dropdown-menu-end"
+							>
+								<li>
+									<button class="dropdown-item" type="button">
+										node/+/datum/0/#
+									</button>
+								</li>
+								<li>
+									<button class="dropdown-item" type="button">
+										user/USER_ID/event/#
+									</button>
+								</li>
+							</ul>
+						</div>
+						<button
+							class="btn btn-primary me-2"
+							type="button"
+							name="connect"
+							disabled
+						>
+							Connect</button
+						><button
+							class="btn btn-danger"
+							type="button"
+							name="disconnect"
+							disabled
+						>
+							End
+						</button>
+					</form>
+					<div class="d-flex my-2 my-lg-0" id="message-actions">
+						<div class="navbar-text">
+							<span
+								class="badge rounded-pill text-bg-secondary mx-4 invisible"
+								id="msg-count"
+								title="Messages received"
+								>0</span
+							>
+						</div>
+						<button
+							class="btn btn-warning"
+							type="button"
+							id="clear"
+							disabled
+						>
+							Clear
+						</button>
+					</div>
+				</div>
+			</div>
+		</nav>
+		<div class="container py-3 px-3 mx-auto">
+			<div class="row">
+				<div class="col-sm-12">
+					<p class="intro">
+						SolarFlux provides a way to access SolarNetwork data in
+						real time. This demo application will connect to
+						SolarFlux and show you any messages matching the MQTT
+						topic filter you specify and that your security token
+						allows. Click the <b>Connect</b> button to get started.
+					</p>
+					<footer
+						id="app-version"
+						class="d-none text-secondary-emphasis"
+						aria-hidden="true"
+					>
+						<small
+							>Version <span class="data-app-version"></span>.
+							Source on
+							<a
+								href="https://github.com/SolarNetwork/solarssh-webterminal"
+								class="link-body-emphasis"
+								target="_blank"
+								>GitHub</a
+							>.</small
+						>
+					</footer>
+				</div>
+			</div>
+		</div>
+
+		<section class="output disabled">
+			<div id="message-template" class="message template">
+				<span class="topic" data-tprop="topic"></span
+				><span class="retained invisible">Retained</span
+				><span class="body" data-tprop="body"></span>
+			</div>
+			<div id="messages" class="container"></div>
+		</section>
+
+		<script type="module" src="ts/main.ts"></script>
+	</body>
+</html>

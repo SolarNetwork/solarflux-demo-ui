@@ -1,6 +1,6 @@
 {
   "name": "solarflux-demo-ui",
-  "version": "1.0.9",
+  "version": "1.0.9-dev.0",
   "description": "SolarFlux Demo UI",
   "keywords": [
     "solarnetwork",
@@ -16,40 +16,62 @@
     "type": "git",
     "url": "https://github.com/SolarNetwork/solarflux-demo-ui.git"
   },
+  "type": "module",
+  "engines": {
+    "node": ">=18.18"
+  },
   "scripts": {
-    "start": "webpack-dev-server",
-    "build": "webpack"
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "devbuild": "tsc && vite build --mode development",
+    "preview": "vite preview",
+    "release": "generate-release --current-version \"$(bin/remove-preid.cjs)\""
+  },
+  "config": {
+    "generateRelease": {
+      "no_confirm": false,
+      "remote": "origin",
+      "pre_commit_commands": [
+        "npm run build"
+      ],
+      "post_complete_commands": [
+        "npmversion --increment prepatch --preid dev --nogit-tag"
+      ],
+      "files_to_commit": []
+    }
   },
   "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "^6.1.0",
-    "@fortawesome/free-solid-svg-icons": "^6.1.0",
-    "ascii85": "^1.0.2",
-    "buffer": "^6.0.3",
-    "cbor-sync": "^1.0.3",
-    "d3-array": "^1.2.4",
-    "d3-selection": "^1.1.0",
+    "@popperjs/core": "^2.11.8",
+    "bootstrap": "^5.3.6",
+    "cbor-sync": "^1.0.4",
+    "d3-array": "^3.2.4",
+    "d3-selection": "^3.0.0",
+    "jquery": "^3.7.1",
     "paho-mqtt": "^1.1.0",
-    "solarnetwork-api-core": "^0.20.0",
-    "uuid": "^3.3.2"
+    "solarnetwork-api-core": "^3.3.0",
+    "uuid": "^11.1.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.17.5",
-    "@babel/plugin-external-helpers": "^7.16.7",
-    "@babel/preset-env": "^7.16.11",
-    "babel-loader": "^8.2.3",
-    "babel-plugin-module-resolver": "^4.1.0",
-    "core-js": "^3.21.1",
-    "css-loader": "^5.2.7",
-    "exports-loader": "^2.0.0",
-    "file-loader": "^6.2.0",
-    "html-webpack-plugin": "^5.5.0",
-    "prettier": "^2.5.1",
-    "regenerator-runtime": "^0.13.9",
-    "style-loader": "^2.0.0",
-    "terser-webpack-plugin": "^5.3.1",
-    "webpack": "^5.71.0",
-    "webpack-cli": "^4.7.2",
-    "webpack-dev-server": "^4.8.1",
-    "webpack-merge": "^5.8.0"
+    "@types/bootstrap": "^5.2.10",
+    "@types/crypto-js": "^4.2.2",
+    "@types/d3-array": "^3.2.1",
+    "@types/d3-selection": "^3.0.11",
+    "@types/jquery": "^3.5.32",
+    "@types/paho-mqtt": "^1.0.10",
+    "@typescript-eslint/eslint-plugin": "^8.32.1",
+    "@typescript-eslint/parser": "^8.32.1",
+    "eslint": "^9.27.0",
+    "generate-release": "^1.1.1",
+    "npmversion": "^2.0.5",
+    "sass": "^1.89.0",
+    "typescript": "^5.8.3",
+    "vite": "^6.3.5"
+  },
+  "overrides": {
+    "json5": "2.2.3",
+    "lodash": "4.17.21",
+    "minimist": "1.2.8",
+    "postcss": "8.4.38",
+    "semver": "7.6.0"
   }
 }
