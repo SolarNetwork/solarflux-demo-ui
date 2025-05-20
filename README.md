@@ -1,14 +1,14 @@
 # SolarFlux Demo UI
 
-This project contains a demo webapp that shows how to connect to SolarFlux and consume real-time
-datum updates posted there.
+This project contains a demo webapp called SolarFlux Monitor that shows how to connect to
+[SolarFlux][solarflux-api] and consume real-time messages posted there.
 
-![screenshot](docs/solarflux-demo-ui.png)
+<img alt="Application screenshot" src="docs/solarflux-monitor@2x.png" width="1066">
 
 # Use
 
 Fill in a valid SolarNetwork security token and secret. Optionally tweak the topic pattern if you
-like, i.e. to narrow the nodes and/or sources the app subscribes to. Then 
+like, i.e. to narrow the nodes and/or sources the app subscribes to. Then
 
 Topics follow this syntax:
 
@@ -38,43 +38,23 @@ user/234/node/2/datum/0/Building1/Room1/Light1
 user/234/node/2/datum/0/Building1/Room1/Light2
 ```
 
+# Building from source
 
-# Building
+To build yourself, clone or download this repository. You need to have
+Node 20.19+ installed. Then:
 
-The build uses [NPM][npm] or [Yarn][yarn]. First, initialize the dependencies:
+```sh
+# initialize dependencies
+npm ci
 
-```shell
-# NPM
-npm install
+# run development live server on http://localhost:8080
+npm run dev
 
-# or, Yarn
-yarn install
+# build for production
+npm run build
 ```
 
-Then, the development web server can be started via
-
-```shell
-# NPM
-npm run start
-
-# or, Yarn
-yarn run start
-```
-
-and then the app can be reached at [localhost:9000](http://localhost:9000). For a
-produciton build, use
-
-```shell
-# NPM
-npm run build -- --config webpack.prod.js
-
-# or, Yarn
-yarn run build --config webpack.prod.js
-```
-
-and the app will be built in the `dist` directory.
-
+Running the `build` script will generate the application into the `dist/` directory.
 
 [npm]: https://www.npmjs.com/
-[yarn]: https://yarnpkg.com/
-
+[solarflux-api]: https://github.com/SolarNetwork/solarnetwork/wiki/SolarFlux-API
