@@ -1,6 +1,6 @@
 {
   "name": "solarflux-demo-ui",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "description": "SolarFlux Demo UI",
   "keywords": [
     "solarnetwork",
@@ -42,30 +42,30 @@
   },
   "dependencies": {
     "@popperjs/core": "^2.11.8",
-    "bootstrap": "^5.3.6",
+    "bootstrap": "^5.3.8",
     "cbor-sync": "^1.0.4",
     "d3-array": "^3.2.4",
     "d3-selection": "^3.0.0",
     "jquery": "^3.7.1",
     "paho-mqtt": "^1.1.0",
-    "solarnetwork-api-core": "^3.3.0",
-    "uuid": "^11.1.0"
+    "solarnetwork-api-core": "^3.4.0",
+    "uuid": "^13.0.0"
   },
   "devDependencies": {
     "@types/bootstrap": "^5.2.10",
     "@types/crypto-js": "^4.2.2",
     "@types/d3-array": "^3.2.1",
     "@types/d3-selection": "^3.0.11",
-    "@types/jquery": "^3.5.32",
+    "@types/jquery": "^3.5.33",
     "@types/paho-mqtt": "^1.0.10",
-    "@typescript-eslint/eslint-plugin": "^8.32.1",
-    "@typescript-eslint/parser": "^8.32.1",
-    "eslint": "^9.27.0",
+    "@typescript-eslint/eslint-plugin": "^8.43.0",
+    "@typescript-eslint/parser": "^8.43.0",
+    "eslint": "^9.35.0",
     "generate-release": "^1.1.1",
     "npmversion": "^2.0.5",
-    "sass": "^1.89.0",
-    "typescript": "^5.8.3",
-    "vite": "^6.3.5"
+    "sass": "^1.92.1",
+    "typescript": "^5.9.2",
+    "vite": "^7.1.5"
   },
   "overrides": {
     "json5": "2.2.3",
