@@ -54,18 +54,18 @@
   "devDependencies": {
     "@types/bootstrap": "^5.2.10",
     "@types/crypto-js": "^4.2.2",
-    "@types/d3-array": "^3.2.1",
+    "@types/d3-array": "^3.2.2",
     "@types/d3-selection": "^3.0.11",
     "@types/jquery": "^3.5.33",
     "@types/paho-mqtt": "^1.0.10",
-    "@typescript-eslint/eslint-plugin": "^8.43.0",
-    "@typescript-eslint/parser": "^8.43.0",
-    "eslint": "^9.35.0",
+    "@typescript-eslint/eslint-plugin": "^8.46.2",
+    "@typescript-eslint/parser": "^8.46.2",
+    "eslint": "^9.38.0",
     "generate-release": "^1.1.1",
     "npmversion": "^2.0.5",
-    "sass": "^1.92.1",
-    "typescript": "^5.9.2",
-    "vite": "^7.1.5"
+    "sass": "^1.93.2",
+    "typescript": "^5.9.3",
+    "vite": "^7.1.12"
   },
   "overrides": {
     "json5": "2.2.3",
